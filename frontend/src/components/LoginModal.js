@@ -53,6 +53,7 @@ const LoginModal = ({ isOpen, onClose, onLogin }) => {
         
         <form onSubmit={handleSubmit} className="login-form">
           {error && <div className="error-message">{error}</div>}
+          }
           
           <div className="form-group">
             <label htmlFor="username">Usuario:</label>

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import LoginModal from './components/LoginModal';
-import ChatWidget from './components/ChatWidget';
 import './App.css';
 
 // Hook para Meta Pixel events
@@ -23,8 +21,6 @@ function App() {
   const [faq, setFaq] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [user, setUser] = useState(null);
   
   const { trackEvent } = useMetaPixel();
   
@@ -32,27 +28,11 @@ function App() {
   
   // Imágenes del carousel
   const carouselImages = [
-    'https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    'https://images.pexels.com/photos/1871508/pexels-photo-1871508.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    'https://images.pexels.com/photos/1871508/pexels-photo-1871508.jpeg?auto=compress&cs=tinysrgb&w=1200',
-    'https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=1200'
+    '/static/images/fondo1.png',
+    '/static/images/fondo2.png',
+    '/static/images/fondo3.png',
+    '/static/images/fondo4.png'
   ];
-
-  useEffect(() => {
-    // Verificar si hay un usuario logueado
-    const token = localStorage.getItem('token');
-    const savedUser = localStorage.getItem('user');
-    
-    if (token && savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-      }
-    }
-  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,16 +82,6 @@ function App() {
     handleWhatsAppClick('Lead');
   };
 
-  const handleLogin = (userData) => {
-    setUser(userData);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-  };
-
   if (loading) {
     return (
       <div className="loading-screen">
@@ -127,36 +97,13 @@ function App() {
       <header className="header">
         <nav className="nav container">
           <div className="logo">
-            <img src="https://images.pexels.com/photos/1871508/pexels-photo-1871508.jpeg?auto=compress&cs=tinysrgb&w=200" alt="Ares Club Logo" />
+            <img src="/static/images/ares.png" alt="Ares Club Logo" />
           </div>
           <ul className="nav-links">
             <li><a href="#inicio">Inicio</a></li>
             <li><a href="#juegos">Juegos</a></li>
             <li><a href="#bonos">Bonos</a></li>
             <li><a href="#contacto" onClick={() => handleWhatsAppClick()}>Contacto</a></li>
-            {user ? (
-              <li>
-                <span style={{color: '#00ff00'}}>👑 {user.username}</span>
-                <button 
-                  onClick={handleLogout}
-                  style={{
-                    marginLeft: '10px',
-                    background: 'rgba(255,0,0,0.2)',
-                    border: '1px solid #ff0000',
-                    color: '#ffffff',
-                    padding: '5px 10px',
-                    borderRadius: '5px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Salir
-                </button>
-              </li>
-            ) : (
-              <li>
-                <a href="#" onClick={() => setShowLoginModal(true)}>Admin</a>
-              </li>
-            )}
           </ul>
         </nav>
       </header>
@@ -275,9 +222,8 @@ function App() {
           </div>
           <div className="payment-methods">
             {paymentMethods.map((method, index) => (
-              <div key={index} className="payment-method-card">
-                <img src={method.image} alt={method.name} className="payment-image" />
-                <span>{method.icon} {method.name}</span>
+              <div key={index} className="payment-method">
+                {method.name}
               </div>
             ))}
           </div>
@@ -371,22 +317,13 @@ function App() {
           <div className="contact-box">
             <p>Contactanos por correo o WhatsApp:</p>
             <p><strong>Correo:</strong> aresclub.net@gmail.com</p>
-            <p><strong>WhatsApp:</strong> <a href="https://wa.me/5491178419956" target="_blank" rel="noopener noreferrer">+54 9 11 7841 9956</a></p>
+            <p><strong>WhatsApp:</strong> <a href="https://wa.me/5491178419956" target=\"_blank" rel="noopener noreferrer">+54 9 11 7841 9956</a></p>
           </div>
           
           <p>&copy; Ares Club™. Todos los derechos reservados.</p>
           <p>Sitio web oficial para Argentina. Juega responsablemente. +18</p>
         </div>
       </footer>
-
-      {/* Modales y Widgets */}
-      <LoginModal 
-        isOpen={showLoginModal}
-        onClose={() => setShowLoginModal(false)}
-        onLogin={handleLogin}
-      />
-      
-      <ChatWidget user={user} />
     </div>
   );
 }
